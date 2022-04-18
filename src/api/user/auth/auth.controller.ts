@@ -1,8 +1,9 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Param, Post, Res, UsePipes } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { LoginUserDto, RegisterUserDto } from "./dto/register-user.dto";
 import { ValidationPipe } from "../../../common/pipes/validation.pipe";
+import { ResetPasswordDto } from "./dto/password.dto";
 
 @Controller("api/auth")
 @ApiTags("Authentication")
@@ -17,5 +18,13 @@ export class AuthController {
   @Post("/login")
   async login(@Body() auth: LoginUserDto): Promise<any> {
     return await this.authService.login(auth);
+  }
+  @Post("/set-new-password/:token")
+  async setNewPassword(
+    @Param("token") token: string,
+    @Body() data: ResetPasswordDto,
+    @Res() res
+  ) {
+    return await this.authService.setPassword(token, data, res);
   }
 }

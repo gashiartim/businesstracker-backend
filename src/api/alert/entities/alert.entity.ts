@@ -1,3 +1,4 @@
+import { Location } from "src/api/location/entities/location.entity";
 import { User } from "src/api/user/entities/user.entity";
 import {
   Column,
@@ -18,6 +19,13 @@ export class Alert {
 
   @Column({ type: "text", nullable: false })
   message: string;
+
+  @Column("uuid")
+  location_id: string;
+
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "location_id" })
+  location: Location;
 
   @Column({ type: "boolean", nullable: true, default: true })
   isActive: string;

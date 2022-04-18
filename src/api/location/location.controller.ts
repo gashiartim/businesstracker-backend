@@ -15,9 +15,9 @@ import { LocationService } from "./location.service";
 import { CreateLocationDto } from "./dto/create-location.dto";
 import { UpdateLocationDto } from "./dto/update-location.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { AuthGuard } from "src/common/guards/auth.guard";
-import { RolesGuard } from "src/common/guards/roles.guard";
-import { Roles } from "src/common/decorators/roles.decorator";
+import { RolesGuard } from "../../common/guards/roles.guard";
+import { AuthGuard } from "../../common/guards/auth.guard";
+import { Roles } from "../../common/decorators/roles.decorator";
 
 @Controller("api/locations")
 @ApiTags("locations")

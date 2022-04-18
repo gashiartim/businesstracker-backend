@@ -1,11 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "../entities/user.entity";
 import { LoginUserDto, RegisterUserDto } from "./dto/register-user.dto";
 import { AuthServiceGeneral } from "../../../services/auth/AuthService";
 import { HashService } from "../../../services/hash/HashService";
-import { RoleService } from "src/api/role/role.service";
+import { RoleService } from "./../../role/role.service";
+import { ResetPasswordDto } from "./dto/password.dto";
 
 @Injectable()
 export class AuthService {
@@ -78,6 +84,38 @@ export class AuthService {
     );
 
     return { user: { ...userWithoutPassword }, access_token };
+  }
+
+  public async setPassword(token: string, data: ResetPasswordDto, res: any) {
+    let userId: any;
+
+    try {
+      const decodedToken = await this.authService.verifyToken(token);
+
+      if (typeof decodedToken != "object") {
+        throw new BadRequestException();
+      }
+
+      userId = decodedToken.id;
+    } catch (error) {
+      if (error?.name === "TokenExpiredError") {
+        throw new BadRequestException("Set password token expired");
+      }
+      throw new BadRequestException("Bad Set password token");
+    }
+
+    const hashedPw = await new HashService().make(data.new_password);
+
+    await this.userRepository.update(
+      { id: userId },
+      {
+        password: hashedPw,
+      }
+    );
+
+    return res.json({
+      message: "Password updated successfully!",
+    });
   }
 
   public async getUserByEmail(email: string) {

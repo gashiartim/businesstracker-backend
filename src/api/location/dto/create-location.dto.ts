@@ -1,5 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
 export class CreateLocationDto {
   @IsString()
@@ -12,13 +18,13 @@ export class CreateLocationDto {
   @ApiProperty()
   description: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   @IsDefined()
   @ApiProperty()
   lat: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   @IsDefined()
   @ApiProperty()

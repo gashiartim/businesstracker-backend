@@ -42,8 +42,9 @@ export class LocationService {
 
     const { lat: newLat, lng: newLng } = updateLocationDto;
 
-    if (lat !== newLat || lng !== newLng)
+    if (lat !== newLat.toString() || lng !== newLng.toString()) {
       await this.checkIfExists(newLat, newLng);
+    }
 
     await this.locationRepo.update(id, updateLocationDto);
 

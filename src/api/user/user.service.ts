@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { HashService } from "../../services/hash/HashService";
 import { Repository } from "typeorm";
+import { ChangePasswordDto } from "./auth/dto/password.dto";
 import { RegisterUserDto } from "./auth/dto/register-user.dto";
 import { CreateUserDto } from "./dto/user.dto";
 import { UpdateUserDto } from "./dto/user.dto";
@@ -10,7 +12,8 @@ import { User } from "./entities/user.entity";
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
+    private readonly hashService: HashService
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -23,7 +26,16 @@ export class UserService {
   }
 
   async findAll() {
-    return await this.userRepository.findAndCount();
+    const users = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.role", "role")
+      .getMany();
+
+    return users.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+
+      return userWithoutPassword;
+    });
   }
 
   async profile(data: RegisterUserDto): Promise<User> {
@@ -50,7 +62,11 @@ export class UserService {
   }
 
   async getRequestedUserOrFail(id: number) {
-    const user = await this.userRepository.findOne(id);
+    const user = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.role", "role")
+      .where({ id })
+      .getOne();
 
     if (!user) {
       throw new HttpException("User does not exists!", HttpStatus.NOT_FOUND);
@@ -67,6 +83,34 @@ export class UserService {
   }
 
   async findUserByEmail(email: string) {
-    return await this.userRepository.findOne({ where: { email } });
+    return await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.role", "role")
+      .where({ email })
+      .getOne();
+  }
+
+  public async changePassword(user: any, data: ChangePasswordDto) {
+    const userExists = await this.userRepository
+      .createQueryBuilder("user")
+      .addSelect("user.password")
+      .where("user.id =:id", { id: user.id })
+      .getOne();
+
+    if (
+      !(await this.hashService.compare(data.old_password, userExists.password))
+    ) {
+      throw new HttpException("Incorrect old password!", HttpStatus.CONFLICT);
+    }
+
+    return {
+      message: "Password changed successfully!",
+      user: await this.update(
+        userExists.id as any,
+        {
+          password: await this.hashService.make(data.new_password),
+        } as any
+      ),
+    };
   }
 }

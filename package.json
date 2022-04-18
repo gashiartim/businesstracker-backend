@@ -36,8 +36,10 @@
     "@nestjs/graphql": "^9.0.4",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-socket.io": "^8.4.4",
     "@nestjs/swagger": "^5.1.0",
     "@nestjs/typeorm": "^8.0.2",
+    "@nestjs/websockets": "^8.4.4",
     "apollo-server-core": "^3.3.0",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
@@ -56,6 +58,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "slugify": "^1.6.0",
+    "socket.io": "^4.4.1",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.37",
     "typeorm-seeding": "^1.6.1"

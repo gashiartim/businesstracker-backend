@@ -10,6 +10,7 @@ import SetUserToContextMiddleware from "./common/middlewares/setUserToContext.mi
 import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 import { LocationModule } from "./api/location/location.module";
 import { AlertModule } from "./api/alert/alert.module";
+import { AppGateway } from "./app.gateway";
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { AlertModule } from "./api/alert/alert.module";
     AlertModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

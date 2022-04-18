@@ -8,6 +8,11 @@ export class CreateAlertDto {
   message: string;
 
   @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  location_id: string;
+
+  @IsString()
   @IsOptional()
   @ApiProperty()
   sentTo: string;

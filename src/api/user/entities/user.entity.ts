@@ -36,7 +36,7 @@ export class User {
   })
   email: string;
 
-  @Column({ type: "text", select: true })
+  @Column({ type: "text" })
   @Exclude()
   password: string;
 

@@ -7,9 +7,11 @@ import {
   Param,
   Delete,
   UsePipes,
+  Query,
 } from "@nestjs/common";
 import { ValidationPipe } from "src/common/pipes/validation.pipe";
 import { AlertService } from "./alert.service";
+import { AlertFiltersDto } from "./dto/alert-filter.dto";
 import { CreateAlertDto } from "./dto/create-alert.dto";
 import { UpdateAlertDto } from "./dto/update-alert.dto";
 
@@ -24,8 +26,8 @@ export class AlertController {
   }
 
   @Get()
-  findAll() {
-    return this.alertService.findAll();
+  findAll(@Query() options: AlertFiltersDto) {
+    return this.alertService.findAll(options);
   }
 
   @Get(":id")
