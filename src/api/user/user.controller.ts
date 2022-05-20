@@ -8,16 +8,20 @@ import {
   UseGuards,
   UsePipes,
   Put,
+  UseInterceptors,
+  UploadedFile,
+  Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/user.dto";
+import { CreateUserDto, UserFiltersDto } from "./dto/user.dto";
 import { UpdateUserDto } from "./dto/user.dto";
 import { AuthGuard } from "../../common/guards/auth.guard";
 import { LoggedUser } from "../../common/decorators/user.decorator";
 import { Roles } from "../../common/decorators/roles.decorator";
 import { ValidationPipe } from "../../common/pipes/validation.pipe";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ChangePasswordDto } from "./auth/dto/password.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @UseGuards(new AuthGuard())
 @UsePipes(new ValidationPipe())
@@ -34,8 +38,8 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() options: UserFiltersDto) {
+    return this.userService.findAll(options);
   }
 
   @Get("me")
@@ -44,7 +48,7 @@ export class UserController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: number) {
+  findOne(@Param("id") id: string) {
     return this.userService.findOne(id);
   }
 
@@ -54,12 +58,21 @@ export class UserController {
   }
 
   @Put(":id")
-  update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  @UseInterceptors(FileInterceptor("thumbnail"))
+  @ApiConsumes("multipart/form-data")
+  async update(
+    @Param("id") id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile()
+    file: Express.Multer.File
+  ) {
+    console.log({ updateUserDto });
+
+    return await this.userService.update(id, updateUserDto, file);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: number) {
+  remove(@Param("id") id: string) {
     return this.userService.remove(id);
   }
 }

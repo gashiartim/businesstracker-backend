@@ -36,6 +36,12 @@ export class User {
   })
   email: string;
 
+  @Column({
+    type: "text",
+    nullable: true,
+  })
+  about: string;
+
   @Column({ type: "text" })
   @Exclude()
   password: string;
