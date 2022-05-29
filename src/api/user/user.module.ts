@@ -16,7 +16,7 @@ import { MulterModule } from "@nestjs/platform-express";
 import {
   multerConfig,
   multerOptions,
-} from "src/common/middlewares/multer.middleware";
+} from "../../common/middlewares/multer.middleware";
 import { Media } from "../media/entities/media.entity";
 
 @Module({

@@ -23,7 +23,7 @@ import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ChangePasswordDto } from "./auth/dto/password.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
-@UseGuards(new AuthGuard())
+// @UseGuards(new AuthGuard())
 @UsePipes(new ValidationPipe())
 @ApiBearerAuth()
 @ApiTags("Users")
@@ -44,6 +44,8 @@ export class UserController {
 
   @Get("me")
   async getProfile(@LoggedUser() currentUser) {
+    console.log("lshjaksbnklasncmskcdskdkk");
+
     return await this.userService.profile(currentUser);
   }
 

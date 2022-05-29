@@ -1,5 +1,5 @@
 import { Location } from "src/api/location/entities/location.entity";
-import { User } from "src/api/user/entities/user.entity";
+import { User } from "../../../api/user/entities/user.entity";
 import {
   Column,
   CreateDateColumn,

@@ -7,7 +7,7 @@ import { ResetPasswordDto } from "./dto/password.dto";
 
 @Controller("api/auth")
 @ApiTags("Authentication")
-@UsePipes(new ValidationPipe())
+// @UsePipes(new ValidationPipe())
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post("/register")

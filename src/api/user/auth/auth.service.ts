@@ -59,11 +59,13 @@ export class AuthService {
   }
 
   public async login(data: LoginUserDto) {
-    const { password, ...userWithoutPassword } = await this.userRepository
+    const userWithoutPassword = await this.userRepository
       .createQueryBuilder("user")
       .leftJoinAndSelect("user.role", "role")
       .where("user.email =:email", { email: data.email })
       .getOne();
+
+    console.log({ userWithoutPassword });
 
     // findOne({ email: data.email });
 
@@ -71,7 +73,12 @@ export class AuthService {
       throw new Error("User does not exists!");
     }
 
-    if (!(await this.hashService.compare(data.password, password))) {
+    if (
+      !(await this.hashService.compare(
+        data.password,
+        userWithoutPassword.password
+      ))
+    ) {
       throw new HttpException(
         "Password does not match!",
         HttpStatus.UNPROCESSABLE_ENTITY
@@ -82,6 +89,7 @@ export class AuthService {
       { userId: userWithoutPassword.id, email: userWithoutPassword.email },
       { user: { id: userWithoutPassword.id, email: userWithoutPassword.email } }
     );
+    console.log({ access_token });
 
     return { user: { ...userWithoutPassword }, access_token };
   }
