@@ -48,8 +48,6 @@ export class LocationController {
     @Param("id") id: string,
     @Body() updateLocationDto: UpdateLocationDto
   ) {
-    console.log("test updateLocationDto");
-
     return this.locationService.update(id, updateLocationDto);
   }
 

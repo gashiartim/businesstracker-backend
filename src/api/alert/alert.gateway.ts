@@ -28,8 +28,6 @@ export class AlertGateway
     @MessageBody() body: CreateAlertDto | any,
     @ConnectedSocket() client: Socket
   ) {
-    console.log("artimbody", body);
-
     client.to(body.sentTo).emit("alert", {
       message: body.message,
       location_name: body.location.name,

@@ -22,8 +22,6 @@ export async function getUserFromRequest(request?) {
 }
 
 export async function validateToken(auth: string) {
-  console.log({ auth });
-
   if (auth.split(" ")[0] !== "Bearer") {
     throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED);
   }
@@ -41,8 +39,6 @@ export async function validateToken(auth: string) {
 }
 
 export async function getUserFromToken(token) {
-  console.log({ token });
-
   if (!token) {
     return null;
   }

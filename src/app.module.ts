@@ -45,7 +45,6 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    console.log("testim multerConfig", multerConfig);
     consumer
       .apply(SetUserToContextMiddleware)
       .forRoutes({ path: "*", method: RequestMethod.ALL });

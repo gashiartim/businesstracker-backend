@@ -44,8 +44,6 @@ export class UserController {
 
   @Get("me")
   async getProfile(@LoggedUser() currentUser) {
-    console.log("lshjaksbnklasncmskcdskdkk");
-
     return await this.userService.profile(currentUser);
   }
 
@@ -68,8 +66,6 @@ export class UserController {
     @UploadedFile()
     file: Express.Multer.File
   ) {
-    console.log({ updateUserDto });
-
     return await this.userService.update(id, updateUserDto, file);
   }
 

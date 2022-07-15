@@ -1,4 +1,4 @@
-import { Location } from "src/api/location/entities/location.entity";
+import { Location } from "../../../api/location/entities/location.entity";
 import { User } from "../../../api/user/entities/user.entity";
 import {
   Column,

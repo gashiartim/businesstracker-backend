@@ -17,3 +17,4 @@ export class CreateAlertDto {
   @ApiProperty()
   sentTo: string;
 }
+  

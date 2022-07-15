@@ -12,6 +12,7 @@ import { AuthServiceGeneral } from "../../../services/auth/AuthService";
 import { HashService } from "../../../services/hash/HashService";
 import { RoleService } from "./../../role/role.service";
 import { ResetPasswordDto } from "./dto/password.dto";
+import { MediaMorph } from "src/api/media/entities/media-morph.entity";
 
 @Injectable()
 export class AuthService {
@@ -62,10 +63,16 @@ export class AuthService {
     const userWithoutPassword = await this.userRepository
       .createQueryBuilder("user")
       .leftJoinAndSelect("user.role", "role")
-      .where("user.email =:email", { email: data.email })
+      .leftJoinAndMapOne(
+        "user.thumbnail",
+        MediaMorph,
+        "thumbnail",
+        "thumbnail.entity_id = user.id AND thumbnail.entity = (:entity)",
+        { entity: "user" }
+      )
+      .leftJoinAndSelect("thumbnail.media", "media")
+      .where("user.email =:email", { email: data.email.toLowerCase() })
       .getOne();
-
-    console.log({ userWithoutPassword });
 
     // findOne({ email: data.email });
 
@@ -89,7 +96,6 @@ export class AuthService {
       { userId: userWithoutPassword.id, email: userWithoutPassword.email },
       { user: { id: userWithoutPassword.id, email: userWithoutPassword.email } }
     );
-    console.log({ access_token });
 
     return { user: { ...userWithoutPassword }, access_token };
   }
